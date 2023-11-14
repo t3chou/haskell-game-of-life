@@ -1,7 +1,7 @@
 # haskell-game-of-life
 
 ## Overview
-The Haskell Game of Life is an implementation of Conway's Game of Life, a cellular automaton devised by the British mathematician John Horton Conway in 1970. This project is more than just an implementation of the game; it's an exploration of functional programming paradigms, Haskell's powerful features, and software engineering best practices.
+The Haskell Game of Life is an implementation of Conway's Game of Life, a cellular automaton devised by the British mathematician John Horton Conway in 1970. This project is more than just an implementation of the game; it's an exploration of functional programming paradigms, Haskell's powerful features, and software engineering great practices.
 
 ## Goals
 Our primary objectives with this project are:
