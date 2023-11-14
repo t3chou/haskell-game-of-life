@@ -1,29 +1,30 @@
 # haskell-game-of-life
 
-## Overview
-The Haskell Game of Life is an implementation of Conway's Game of Life, a cellular automaton devised by the British mathematician John Horton Conway in 1970. This project is more than just an implementation of the game; it's an exploration of functional programming paradigms, Haskell's powerful features, and software engineering great practices.
+## Introduction
 
-## Goals
-Our primary objectives with this project are:
+Welcome to the Conway's Game of Life repository! This project is an implementation of the famous cellular automaton devised by the British mathematician John Horton Conway in 1970. Conway's Game of Life is not a game in the conventional sense but a simulation that follows a set of simple rules to evolve cell structures on a grid through generations.
 
-1. **Implementing Conway's Game of Life Logic**: At the core of this project lies the implementation of the game's logic using pure functional programming principles inherent to Haskell.
+## Game Description
 
-2. **Creating a Text-based UI with `brick`**: Utilizing the `brick` library, the project aims to offer an interactive text-based interface. This interface allows users to view the evolution of the game state in real-time within their terminal.
+The Game of Life is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input from human players. One interacts with the Game of Life by creating an initial configuration and observing how it evolves.
 
-3. **Focus on Test-Driven Development**: Emphasizing software reliability, the project integrates extensive testing, including unit tests with HUnit and property tests with QuickCheck.
+## Rules
 
-4. **Seamless Installation and Usage**: Ensuring easy setup, the project is structured to be effortlessly installable and runnable using Stack or Cabal, making it accessible to a wide range of users.
+The game is played on an infinite, two-dimensional orthogonal grid of square cells, each of which is in one of two possible states, alive or dead. Every cell interacts with its eight neighbors, which are the cells that are horizontally, vertically, or diagonally adjacent. At each step in time, the following transitions occur:
 
-5. **Documentation and Community Engagement**: Comprehensive documentation and guidelines are provided, encouraging community contributions and feedback.
+1. **Birth**: A dead cell with exactly three live neighbors becomes a live cell.
+2. **Survival**: A live cell with two or three live neighbors stays alive.
+3. **Death**:
+   - Overpopulation: A live cell with more than three live neighbors dies.
+   - Loneliness: A live cell with fewer than two live neighbors dies.
 
-## Installation and Running
+## Goals and Educational Value
 
-Instructions for installing and running the application using Stack or Cabal will be provided here.
+The primary goal of Conway's Game of Life is to observe the evolving patterns based on the simple rules. It's fascinating to see how intricate structures can emerge and evolve from simple beginnings. The Game of Life is not only a fun simulation but also an excellent tool for teaching concepts in mathematics, computer science, and theoretical biology, particularly:
 
-## Contributing
+- Cellular automata theory
+- Emergent behaviors
+- Pattern formation
+- Fractals and complexity
 
-Contributions to the project are welcome. Please refer to the contribution guidelines for more information.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+Enjoy exploring the vast universe of Conway's Game of Life, where simplicity leads to complexity!
