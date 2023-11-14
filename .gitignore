@@ -1,0 +1,8 @@
+.stack-work/
+dist-newstyle/
+dist/
+*.hi
+*.o
+.vscode/
+.idea/
+.DS_Store
