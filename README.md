@@ -4,7 +4,7 @@
 A59023999, A59023768, A59025027
 
 ## Overview
-This project implements Conway's Game of Life using Haskell, a language ideal for modeling complex mathematical concepts with clarity. The Game of Life, a zero-player game, evolves from an initial state, demonstrating emergent behavior from simple rules. Haskell's strong typing, pure functional nature, and lazy evaluation align perfectly with this simulation.
+This project implements Conway's Game of Life by using Haskell, which is ideal for modeling complex mathematical concepts with clarity. The Game of Life, a zero-player game, evolves from an initial state, showing emergent behavior from some simple rules. Haskell's strong typing, pure functional nature, and lazy evaluation align perfectly with this simulation.
 
 ## Game Description
 The Game of Life occurs on an infinite grid of cells, each alive or dead, changing states based on neighboring cells. The rules are:
