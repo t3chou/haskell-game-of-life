@@ -19,7 +19,6 @@ Haskell's syntax is ideal for expressing the game's rules. Key aspects of our im
 
 1. **Functional Grid Representation**: Using list comprehensions and higher-order functions for the grid.
 2. **State Transformation**: Pure functions for predictable state transitions between generations.
-3. **Lazy Evaluation**: Managing potentially infinite grids efficiently.
 4. **Performance Optimization**: Utilizing Haskell’s type system and optimization techniques for handling large grids.
 5. **Interactive Interface**: Developing a user-friendly interface with the brick library.
 
