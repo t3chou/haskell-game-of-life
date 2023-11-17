@@ -28,6 +28,6 @@ Haskell's syntax is fit for expressing the game's rules. Key aspects of our impl
 1. **Mathematical Fidelity**: Ensure full and accurate implementation of the game that follows Conway’s rules.
 2. **Interactive Interface**: Create a high-level interface for user interaction with the game by brick library.
 3. **User Interactions**: Managing user behavior like key presses for pausing/continuing the game or quitting.
-4. **Use existing libraries of the hackage ecosystem**: Utilizing existing libraries like containers and vector.
+4. **Using existing libraries of the hackage ecosystem**: Utilizing existing libraries like containers and vector.
 
 This project aims to create a robust Conway's Game of Life simulation in Haskell, showcasing the synergy between a mathematical model and functional programming.
