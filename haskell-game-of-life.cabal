@@ -27,6 +27,7 @@ library
   exposed-modules:
       Lib
       Life
+      PresetGrid
   other-modules:
       Paths_haskell_game_of_life
   autogen-modules:

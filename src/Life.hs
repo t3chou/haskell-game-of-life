@@ -1,8 +1,22 @@
 module Life
     (
+        gridRows,
+        gridCols,
+        GridState(..),
+        CellState(..),
+        visualize
     ) where
 
 import qualified Data.Array as A
+
+
+-- | GridSize
+gridRows :: Int
+gridRows = 100
+
+gridCols :: Int
+gridCols = 100
+
 
 -- | GridIndex (index into the state of the grid)
 type GridIndex = (Int, Int)
@@ -31,3 +45,19 @@ data CellState = Alive | Dead
 --    unchanged, to the next generation.
 evolution :: a
 evolution = undefined
+
+
+-- | Takes a GridState, grid rows, and grid cols as inputs and displays the grid
+-- Use this for testing
+visualize :: GridState -> Int -> Int -> IO()
+visualize g rs cs = do
+    mapM_ (\r -> do
+            mapM_  (\c -> do
+                    let cell = grid g A.! (r, c)
+                    putStr (cellChar cell)
+                ) [0..cs-1]
+            putStrLn ""
+        ) [0..rs-1]
+    where
+        cellChar Alive = "o"
+        cellChar Dead = "."
