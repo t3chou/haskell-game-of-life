@@ -33,6 +33,15 @@ data CellState = Alive | Dead
     deriving Eq
 
 
+-- | toggleState can be used to toggle the state of a cell
+toggleState :: GridState -> GridIndex -> GridState
+toggleState (GridState g) idx = GridState (g A.// update)
+    where
+        update = [(idx, toggle (g A.! idx))]
+        toggle Dead = Alive
+        toggle Alive = Dead
+
+
 -- | Evolution (transform the state of the grid)
 -- 1. Birth: A dead cell with exactly three live neighbors becomes a live cell,
 --    as if by reproduction.
