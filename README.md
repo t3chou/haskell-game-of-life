@@ -1,6 +1,25 @@
 # Conway's Game in Haskell
 
+## Updated per Milestone 2 requirements
+
+- What is the architecture of your application (the key components)?
+
+Currently, we finished the basic functionality of the program to run in the command line but not using brick. As you can observe in the source code directory, there are three files under the src directory, and the `evolution` function in `Life.hs` is the key part for the transition to happen. In the next step, we plan to make a GUI interface using brick and connect the basic logic with the foreground’s fancy appearance. 
+
+- What challenges (if any) did you have so far and how did you solve them?
+
+I believe using Haskell to program is the biggest challenge right now. It is the first time for everyone to use Haskell, we are not familiar with a lot of details. However, once we get over the initial learning curve and get familiar with those libraries, things should become easier. To answer how to solve them, we need to program more using Rust to solve it.  
+
+- Do you expect to meet your goals until the deadline?
+
+We should be able to do that. 
+
+- If not, how will you modify your goals?
+
+We do not plan to modify our goals, even though the integration functionality might be simpler than the original proposed one. 
+
 ## Members of the Group
+
 A59023999, A59023768, A59025027, A59012427
 
 ## Overview
