@@ -73,3 +73,13 @@ test-suite haskell-game-of-life-test
     , brick
     , haskell-game-of-life
   default-language: Haskell2010
+
+test-suite my-test-suite
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: TestMain.hs
+  build-depends:
+    base,
+    haskell-game-of-life,
+    QuickCheck
+  default-language: Haskell2010
