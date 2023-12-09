@@ -28,6 +28,7 @@ library
       Lib
       Life
       PresetGrid
+      UI
   other-modules:
       Paths_haskell_game_of_life
   autogen-modules:
