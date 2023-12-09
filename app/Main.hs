@@ -1,28 +1,18 @@
-module Main (main) where
-
 import qualified Life       as L
 import qualified PresetGrid as P
 import Control.Concurrent (threadDelay)
 
-import Brick
-import Brick.Widgets.Border
-import Brick.Widgets.Center
-import qualified Graphics.Vty as V
-import Life (evolution, GridState(..), CellState(..), gridRows, gridCols)
-import PresetGrid (strToGrid, deadGrid)
-
-import UI (runUI)
-import PresetGrid (strToGrid, beacon)
-
-
 main :: IO ()
-main = runUI (strToGrid beacon)
+main = do 
+    L.visualize (P.strToGrid P.boat) L.gridRows L.gridCols
+    let initialGrid = P.strToGrid P.beacon
+    loop initialGrid
 
 loop :: L.GridState -> IO ()
 loop currentSt = do
     let newSt = L.evolution currentSt
     L.visualize newSt L.gridRows L.gridCols
     putStrLn ""
+    L.visualize (L.evolution (P.strToGrid P.boat)) L.gridRows L.gridCols
     threadDelay 1000000
     loop newSt
-    
