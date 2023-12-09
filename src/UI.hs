@@ -1,6 +1,7 @@
 module UI where
 
 import Brick
+import Brick.Types (Next, BrickEvent, EventM)
 import Brick.Widgets.Border
 import Brick.Widgets.Center
 import qualified Graphics.Vty as V
