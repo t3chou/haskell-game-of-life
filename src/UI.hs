@@ -61,5 +61,5 @@ handleEvent state _ = continue state
 runUI :: GridState -> IO ()
 runUI grid = do
     let initialState = AppState grid False
-    finalState <- defaultMain app initialState
-    -- You can use finalState to perform any actions after the app closes
+    _ <- defaultMain app initialState
+    return ()
