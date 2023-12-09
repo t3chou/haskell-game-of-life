@@ -71,6 +71,7 @@ test-suite haskell-game-of-life-test
       array
     , base >=4.7 && <5
     , brick
+    , vty
     , haskell-game-of-life
   default-language: Haskell2010
 
