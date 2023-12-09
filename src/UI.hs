@@ -1,8 +1,8 @@
 module UI where
 
 import Brick
-import Brick.Main (App(..), showFirstCursor, defaultMain, halt, continue)
-import Brick.Types (BrickEvent, EventM)
+import Brick.Main (App(..), showFirstCursor, defaultMain)
+import Brick.Types (BrickEvent, EventM, Next, continue, halt)
 import Brick.Widgets.Border
 import Brick.Widgets.Center
 import qualified Graphics.Vty as V
