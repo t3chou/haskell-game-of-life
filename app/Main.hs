@@ -11,11 +11,12 @@ import qualified Graphics.Vty as V
 import Life (evolution, GridState(..), CellState(..), gridRows, gridCols)
 import PresetGrid (strToGrid, deadGrid)
 
+import UI (runUI)
+import PresetGrid (strToGrid, beacon)
+
 
 main :: IO ()
-main = do 
-    let initialGrid = P.strToGrid P.beacon
-    loop initialGrid
+main = runUI (strToGrid beacon)
 
 loop :: L.GridState -> IO ()
 loop currentSt = do
