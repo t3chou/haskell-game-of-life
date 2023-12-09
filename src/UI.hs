@@ -1,7 +1,8 @@
 module UI where
 
 import Brick
-import Brick.Types (Next, BrickEvent, EventM)
+import Brick.Main (App(..), showFirstCursor, defaultMain, halt, continue)
+import Brick.Types (BrickEvent, EventM)
 import Brick.Widgets.Border
 import Brick.Widgets.Center
 import qualified Graphics.Vty as V
@@ -52,8 +53,7 @@ handleEvent :: AppState -> BrickEvent n e -> EventM n (Next AppState)
 handleEvent state (VtyEvent ev) =
     case ev of
         V.EvKey V.KEsc [] -> halt state
-        V.EvKey (V.KChar ' ') [] -> continue $ state { isRunning = not (isRunning state) }
-        V.EvKey V.KEnter [] -> continue $ state { gridState = evolution (gridState state) }
+        -- other cases
         _ -> continue state
 handleEvent state _ = continue state
 
