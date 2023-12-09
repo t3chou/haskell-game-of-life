@@ -3,6 +3,10 @@ module Main (main) where
 import qualified Life       as L
 import qualified PresetGrid as P
 import Control.Concurrent (threadDelay)
+import qualified Graphics.Vty as V
+import Brick
+import Brick.Widgets.Border
+import Brick.Widgets.Center
 
 main :: IO ()
 main = do 
