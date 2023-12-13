@@ -85,5 +85,5 @@ test-suite my-test-suite
   build-depends:
     base,
     haskell-game-of-life,
-    QuickCheck
+    QuickCheck >=2.14 && <2.15
   default-language: Haskell2010
