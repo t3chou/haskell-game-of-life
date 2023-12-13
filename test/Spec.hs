@@ -1,6 +1,6 @@
 -- QuickCheck Test for evolution
 
-module LifeSpec where
+module Spec where
 
 import Test.QuickCheck
 import Life
