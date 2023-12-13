@@ -1,35 +1,34 @@
-module Main where
+-- QuickCheck Test for evolution
+
+module LifeSpec where
 
 import Test.QuickCheck
+import Life
+import PresetGrid
 import qualified Data.Array as A
-import Life (evolution, GridState(..), CellState(..), gridRows, gridCols)
-import PresetGrid (strToGrid, deadGrid)
 
--- Define Arbitrary instances for the data types
-instance Arbitrary CellState where
-    arbitrary = elements [Alive, Dead]
+-- Property to test if a dead cell with exactly three live neighbors becomes alive
+prop_birthRule :: GridState -> GridIndex -> Bool
+prop_birthRule initialState idx = undefined -- Implementation here
 
-instance Arbitrary GridState where
-    arbitrary = do
-        cells <- vectorOf (gridRows * gridCols) arbitrary
-        let bounds = ((0, 0), (gridRows - 1, gridCols - 1))
-        return $ GridState (A.array bounds cells)
+-- Property to test survival rule
+prop_survivalRule :: GridState -> GridIndex -> Bool
+prop_survivalRule initialState idx = undefined -- Implementation here
 
--- Property: The grid size remain constant after each evolution
-prop_GridSizeConstant :: GridState -> Bool
-prop_GridSizeConstant (GridState grid) =
-    let GridState newGrid = evolution (GridState grid)
-    in  A.bounds grid == A.bounds newGrid
+-- Property to test death by isolation
+prop_deathByIsolationRule :: GridState -> GridIndex -> Bool
+prop_deathByIsolationRule initialState idx = undefined -- Implementation here
 
--- Property: A dead grid stays dead after evolution
-prop_DeadGridStaysDead :: Bool
-prop_DeadGridStaysDead =
-    let GridState initialGrid = deadGrid
-        GridState evolvedGrid = evolution initialGrid
-    in  all (== Dead) (A.elems evolvedGrid)
+-- Property to test death by overcrowding
+prop_deathByOvercrowdingRule :: GridState -> GridIndex -> Bool
+prop_deathByOvercrowdingRule initialState idx = undefined -- Implementation here
 
--- Main function to run tests
-main :: IO ()
-main = do
-    quickCheck prop_GridSizeConstant
-    quickCheck prop_DeadGridStaysDead
+
+
+-- QuickCheck Test for toggleState
+
+-- Property to test toggling of cell state
+prop_toggleState :: GridState -> GridIndex -> Bool
+prop_toggleState initialState idx = undefined -- Implementation here
+
+
