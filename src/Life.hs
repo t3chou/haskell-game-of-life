@@ -4,6 +4,7 @@ module Life
         gridCols,
         GridState(..),
         CellState(..),
+        GridIndex,
         evolution,
         visualize
     ) where
@@ -92,3 +93,11 @@ visualize (GridState g) rs cs = concatMap (\r -> concatMap (\c -> cellChar (g A.
     where
         cellChar Alive = "o"
         cellChar Dead  = "."
+
+instance Eq GridState where
+    (GridState arr1) == (GridState arr2) = arr1 == arr2
+    
+instance Show GridState where
+    show (GridState grid) = unlines [concat [showCell (grid A.! (r, c)) | c <- [0..gridCols-1]] | r <- [0..gridRows-1]]
+        where showCell Alive = "o"
+              showCell Dead  = "."
