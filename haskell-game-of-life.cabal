@@ -28,7 +28,7 @@ library
       Lib
       Life
       PresetGrid
-      UI
+      -- TestState
   other-modules:
       Paths_haskell_game_of_life
   autogen-modules:
@@ -40,7 +40,6 @@ library
       array
     , base >=4.7 && <5
     , brick
-    , vty
   default-language: Haskell2010
 
 executable haskell-game-of-life-exe
@@ -56,6 +55,12 @@ executable haskell-game-of-life-exe
       array
     , base >=4.7 && <5
     , brick
+    , microlens
+    , microlens-th
+    , microlens-mtl
+    , mtl
+    , time
+    , random
     , vty
     , haskell-game-of-life
   default-language: Haskell2010
@@ -71,20 +76,9 @@ test-suite haskell-game-of-life-test
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      array
+      QuickCheck
+    , array
     , base >=4.7 && <5
     , brick
-    , vty
-    , QuickCheck
     , haskell-game-of-life
-  default-language: Haskell2010
-
-test-suite my-test-suite
-  type: exitcode-stdio-1.0
-  hs-source-dirs: test
-  main-is: TestMain.hs
-  build-depends:
-    base,
-    haskell-game-of-life,
-    QuickCheck >=2.14 && <2.15
   default-language: Haskell2010

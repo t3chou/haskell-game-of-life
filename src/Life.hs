@@ -74,15 +74,21 @@ evolution (GridState g) = GridState (g A.// updates)
 
 -- | Takes a GridState, grid rows, and grid cols as inputs and displays the grid
 -- Use this for testing
-visualize :: GridState -> Int -> Int -> IO()
-visualize (GridState g) rs cs = do
-    mapM_ (\r -> do
-            mapM_  (\c -> do
-                    let cell = g A.! (r, c)
-                    putStr (cellChar cell)
-                ) [0..cs-1]
-            putStrLn ""
-        ) [0..rs-1]
+-- visualize :: GridState -> Int -> Int -> IO()
+-- visualize (GridState g) rs cs = do
+--     mapM_ (\r -> do
+--             mapM_  (\c -> do
+--                     let cell = g A.! (r, c)
+--                     putStr (cellChar cell)
+--                 ) [0..cs-1]
+--             putStrLn ""
+--         ) [0..rs-1]
+--     where
+--         cellChar Alive = "o"
+--         cellChar Dead  = "."
+
+visualize :: GridState -> Int -> Int -> String
+visualize (GridState g) rs cs = concatMap (\r -> concatMap (\c -> cellChar (g A.! (r, c))) [0..cs-1] ++ "\n") [0..rs-1]
     where
         cellChar Alive = "o"
         cellChar Dead  = "."
