@@ -9,26 +9,40 @@ import qualified Data.Array as A
 
 -- Property to test if a dead cell with exactly three live neighbors becomes alive
 prop_birthRule :: GridState -> GridIndex -> Bool
-prop_birthRule initialState idx = undefined -- Implementation here
+prop_birthRule initialState idx =
+    let neighbors = liveNeighbors initialState idx
+        cellState = currentState initialState idx
+    in case cellState of
+        Dead -> neighbors == 3
+        _    -> True  -- If the cell is not dead, the birth rule does not apply
 
 -- Property to test survival rule
 prop_survivalRule :: GridState -> GridIndex -> Bool
-prop_survivalRule initialState idx = undefined -- Implementation here
+prop_survivalRule initialState idx =
+    let neighbors = liveNeighbors initialState idx
+        cellState = currentState initialState idx
+    in case cellState of
+        Alive -> neighbors == 2 || neighbors == 3
+        _     -> True  -- If the cell is not alive, the survival rule does not apply
 
--- Property to test death by isolation
-prop_deathByIsolationRule :: GridState -> GridIndex -> Bool
-prop_deathByIsolationRule initialState idx = undefined -- Implementation here
+-- Property to test grid initialization
+prop_gridInitialization :: Bool
+prop_gridInitialization =
+    let grid = initializeGrid examplePreset
+    in A.bounds grid == ((0,0), (gridHeight - 1, gridWidth - 1))
 
--- Property to test death by overcrowding
-prop_deathByOvercrowdingRule :: GridState -> GridIndex -> Bool
-prop_deathByOvercrowdingRule initialState idx = undefined -- Implementation here
+-- Test if the evolution function preserves the grid size
+prop_evolutionPreservesGridSize :: GridState -> Bool
+prop_evolutionPreservesGridSize grid =
+    let evolvedGrid = evolve grid
+    in A.bounds grid == A.bounds evolvedGrid
 
+-- Test for edge cases
+prop_edgeCases :: GridState -> Bool
+prop_edgeCases grid = undefined  -- Implementation for edge cases
 
+return []
+runTests = $quickCheckAll
 
--- QuickCheck Test for toggleState
-
--- Property to test toggling of cell state
-prop_toggleState :: GridState -> GridIndex -> Bool
-prop_toggleState initialState idx = undefined -- Implementation here
-
-
+main :: IO ()
+main = runTests
