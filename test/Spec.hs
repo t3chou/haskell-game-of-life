@@ -1,4 +1,6 @@
 -- QuickCheck Test for Conway's Game of Life
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Move guards forward" #-}
 module Main where
 -- module Spec where
 
@@ -24,15 +26,7 @@ instance Arbitrary GridIndexWrapper where
         col <- choose (0, L.gridCols - 1)
         return $ GridIndexWrapper (row, col)
 
--- Helper function to count live neighbors
--- liveNeighbors :: L.GridState -> GridIndexWrapper -> Int
--- liveNeighbors (L.GridState grid) (GridIndexWrapper(x, y)) = length $ filter isLive neighbors
---   where
---     neighbors = [(i, j) | i <- [x-1..x+1], j <- [y-1..y+1], (i, j) /= (x, y)]
---     isLive idx = case grid A.! idx of
---                     L.Alive -> True
---                     _     -> False
-                    
+-- Helper function to count live neighbors                 
 liveNeighbors :: L.GridState -> GridIndexWrapper -> Int
 liveNeighbors (L.GridState grid) (GridIndexWrapper(x, y)) = length $ filter isLive neighbors
   where
@@ -90,7 +84,7 @@ prop_stillLife =
 
 
 testPresetGrid :: L.GridState -> Bool
-testPresetGrid (L.GridState grid) =  L.evolution (L.GridState grid) == (L.GridState grid)
+testPresetGrid (L.GridState grid) =  L.evolution (L.GridState grid) == L.GridState grid
 
 
 tester :: String -> String
@@ -122,7 +116,7 @@ main = do
   putStrLn "Testing Conway's Game of Life"
   quickCheck prop_birthRule
   quickCheck prop_survivalRule
---   quickCheck prop_deathRule
+  quickCheck prop_deathRule
   quickCheck prop_stillLife
   quickCheck prop_evolutionConservesCells
   putStrLn $ if blinker2 == tester P.blinker  then "OK" else "FAIL!"
