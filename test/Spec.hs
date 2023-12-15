@@ -16,42 +16,60 @@ instance Arbitrary L.GridState where
         states <- vectorOf (L.gridRows * L.gridCols) arbitrary
         return $ L.GridState (A.listArray ((0, 0), (L.gridRows - 1, L.gridCols - 1)) states)
 
+newtype GridIndexWrapper = GridIndexWrapper (Int, Int) deriving Show
+
+instance Arbitrary GridIndexWrapper where
+    arbitrary = do
+        row <- choose (0, L.gridRows - 1)
+        col <- choose (0, L.gridCols - 1)
+        return $ GridIndexWrapper (row, col)
+
 -- Helper function to count live neighbors
-liveNeighbors :: L.GridState -> L.GridIndex -> Int
-liveNeighbors (L.GridState grid) (x, y) = length $ filter isLive neighbors
+-- liveNeighbors :: L.GridState -> GridIndexWrapper -> Int
+-- liveNeighbors (L.GridState grid) (GridIndexWrapper(x, y)) = length $ filter isLive neighbors
+--   where
+--     neighbors = [(i, j) | i <- [x-1..x+1], j <- [y-1..y+1], (i, j) /= (x, y)]
+--     isLive idx = case grid A.! idx of
+--                     L.Alive -> True
+--                     _     -> False
+                    
+liveNeighbors :: L.GridState -> GridIndexWrapper -> Int
+liveNeighbors (L.GridState grid) (GridIndexWrapper(x, y)) = length $ filter isLive neighbors
   where
-    neighbors = [(i, j) | i <- [x-1..x+1], j <- [y-1..y+1], (i, j) /= (x, y)]
-    isLive idx = case grid A.! idx of
-                    L.Alive -> True
-                    _     -> False
+    neighbors = [(i, j) | i <- [x-1..x+1], j <- [y-1..y+1], 
+                          i >= 0, i < L.gridRows, j >= 0, j < L.gridCols,
+                          (i, j) /= (x, y)]
+    isLive (x, y) = case grid A.! (x, y) of
+                L.Alive -> True
+                _     -> False
 
 -- Property to test if a dead cell with exactly three live neighbors becomes alive
-prop_birthRule :: L.GridState -> L.GridIndex -> Property
-prop_birthRule initialState idx = 
+prop_birthRule :: L.GridState -> GridIndexWrapper -> Property
+prop_birthRule initialState (GridIndexWrapper(x, y)) = 
     within 10000 $
-    (grid A.! idx == L.Dead && liveNeighbors initialState idx == 3) ==>
+    (grid A.! (x, y) == L.Dead && liveNeighbors initialState (GridIndexWrapper(x, y)) == 3) ==>
     let newState = L.evolution initialState in
-    (newState `getCellValue` idx) == L.Alive
+    (newState `getCellValue` (x, y)) == L.Alive
   where
     grid = getGrid initialState
 
 -- Property to test survival rule
-prop_survivalRule :: L.GridState -> L.GridIndex -> Property
-prop_survivalRule initialState idx = 
+prop_survivalRule :: L.GridState -> GridIndexWrapper -> Property
+prop_survivalRule initialState (GridIndexWrapper(x, y)) = 
     within 10000 $
-    (grid A.! idx == L.Alive && liveNeighbors initialState idx `elem` [2, 3]) ==>
+    (grid A.! (x, y) == L.Alive && liveNeighbors initialState (GridIndexWrapper(x, y)) `elem` [2, 3]) ==>
     let newState = L.evolution initialState in
-    (newState `getCellValue` idx) == L.Alive
+    (newState `getCellValue` (x, y)) == L.Alive
   where
     grid = getGrid initialState
 
--- Property to test overpopulation and underpopulation rules
-prop_deathRule :: L.GridState -> L.GridIndex -> Property
-prop_deathRule initialState idx = 
+-- -- Property to test overpopulation and underpopulation rules
+prop_deathRule :: L.GridState -> GridIndexWrapper -> Property
+prop_deathRule initialState (GridIndexWrapper(x, y)) = 
     within 10000 $
-    (grid A.! idx == L.Alive && (liveNeighbors initialState idx < 2 || liveNeighbors initialState idx > 3)) ==>
+    (grid A.! (x, y) == L.Alive && (liveNeighbors initialState (GridIndexWrapper(x, y)) < 2 || liveNeighbors initialState (GridIndexWrapper(x, y)) > 3)) ==>
     let newState = L.evolution initialState in
-    (newState `getCellValue` idx) == L.Dead
+    (newState `getCellValue` (x, y)) == L.Dead
   where
     grid = getGrid initialState
 
@@ -64,17 +82,15 @@ getGrid :: L.GridState -> A.Array L.GridIndex L.CellState
 getGrid (L.GridState grid) = grid
 
 -- Tests for preset grids
-prop_presetGrids :: Property
-prop_presetGrids = 
+prop_stillLife :: Property
+prop_stillLife = 
     within 10000 $
     conjoin [testPresetGrid (strToGrid block), testPresetGrid (strToGrid beehive), testPresetGrid (strToGrid loaf), 
-             testPresetGrid (strToGrid boat), testPresetGrid (strToGrid tub), testPresetGrid (strToGrid blinker),
-             testPresetGrid (strToGrid toad), testPresetGrid (strToGrid beacon)]
+             testPresetGrid (strToGrid boat),  testPresetGrid (strToGrid tub)]
 
 
 testPresetGrid :: L.GridState -> Bool
-testPresetGrid (L.GridState grid) = L.evolution (L.GridState grid) == (L.GridState grid)
-
+testPresetGrid (L.GridState grid) =  L.evolution (L.GridState grid) == (L.GridState grid)
 
 
 tester :: String -> String
@@ -104,87 +120,16 @@ prop_evolutionConservesCells grid =
 main :: IO ()
 main = do
   putStrLn "Testing Conway's Game of Life"
---   quickCheck prop_birthRule
---   quickCheck prop_survivalRule
-  -- quickCheck prop_deathRule
-  -- quickCheck prop_presetGrids
+  quickCheck prop_birthRule
+  quickCheck prop_survivalRule
+--   quickCheck prop_deathRule
+  quickCheck prop_stillLife
   quickCheck prop_evolutionConservesCells
-  putStrLn $ if block2 == tester P.block then "OK" else "FAIL!"
-  putStrLn $ if beehive2 == tester P.beehive then "OK" else "FAIL!"
-  putStrLn $ if loaf2 == tester P.loaf then "OK" else "FAIL!"
-  putStrLn $ if boat2 == tester P.boat then "OK" else "FAIL!"
-  putStrLn $ if tub2 == tester P.tub then "OK" else "FAIL!"
   putStrLn $ if blinker2 == tester P.blinker  then "OK" else "FAIL!"
   putStrLn $ if toad2 == tester P.toad  then "OK" else "FAIL!"
   putStrLn $ if beacon2 == tester P.beacon then "OK" else "FAIL!"
 
--- | New State (Still Life)
-block2 :: String
-block2 = "\
-    \..........\
-    \..........\
-    \..........\
-    \..........\
-    \....oo....\
-    \....oo....\
-    \..........\
-    \..........\
-    \..........\
-    \.........."
-
-beehive2 :: String
-beehive2 = "\
-    \..........\
-    \..........\
-    \..........\
-    \..........\
-    \....oo....\
-    \...o..o...\
-    \....oo....\
-    \..........\
-    \..........\
-    \.........."
-
-loaf2 :: String
-loaf2 = "\
-    \..........\
-    \..........\
-    \..........\
-    \....oo....\
-    \...o..o...\
-    \....o.o...\
-    \.....o....\
-    \..........\
-    \..........\
-    \.........."
-
-boat2 :: String
-boat2 = "\
-    \..........\
-    \..........\
-    \..........\
-    \..........\
-    \...oo.....\
-    \...o.o....\
-    \....o.....\
-    \..........\
-    \..........\
-    \.........."
-
-tub2 :: String
-tub2 = "\
-    \..........\
-    \..........\
-    \..........\
-    \..........\
-    \....o.....\
-    \...o.o....\
-    \....o.....\
-    \..........\
-    \..........\
-    \.........."
-
-
+-- | New State
 -- | Oscillators
 blinker2 :: String
 blinker2 = "\
