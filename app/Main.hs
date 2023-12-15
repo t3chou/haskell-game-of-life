@@ -1,12 +1,13 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Main (main) where
 
 import qualified Life       as L
 import qualified PresetGrid as P
 import Control.Concurrent (threadDelay)
+import qualified Data.Text as T
 
 import Lens.Micro ((^.), (%~))
 import Lens.Micro.TH (makeLenses)
@@ -16,6 +17,11 @@ import Data.Monoid
 #endif
 import qualified Graphics.Vty as V
 import Lens.Micro.Mtl (use, (.=), (%=))
+import Brick.Util (fg, on)
+import qualified Brick.AttrMap as A
+import qualified Brick.Widgets.Center as C
+import qualified Brick.Widgets.Border as B
+import qualified Brick.Widgets.Border.Style as BS
 
 import Brick.Main
   ( App(..), neverShowCursor, defaultMain
@@ -30,8 +36,24 @@ import Brick.Types
   , BrickEvent(..) 
   )
 import Brick.Widgets.Core
-  ( vBox
+  ( (<+>)
+  , withAttr
+  , vLimit
+  , hLimit
+  , hBox
+  , vBox
+  , updateAttrMap
+  , withBorderStyle
+  , padAll
+  , padLeft
+  , padRight
+  , padTop
+  , padBottom
+  , padTopBottom
+  , padLeftRight
+  , txt
   , str
+  , Padding(..)
   )
 
 data St =
@@ -43,8 +65,12 @@ makeLenses ''St
 drawUI :: St -> [Widget ()]
 drawUI st = [ui]
     where
-        ui = vBox [ str $ "Current state: \n" <> L.visualize (_state st) L.gridRows L.gridCols <> "\n"
-                  , str "(Press Esc to quit or n for the next state)"
+        ui = vBox [ 
+          B.hBorderWithLabel (str "haskell game of life")
+         , vBox [ C.center (str "Left of vertical border")
+             <+> B.vBorder
+             <+> C.vCenter (hBox [ padLeftRight 5 $ str ("Current: \n" <> L.visualize (_state st) L.gridRows L.gridCols <> "\n")])
+                  , str "(Press Esc to quit or n for the next state)" ]
                   ]
 
 appEvent :: BrickEvent () e -> EventM () St ()

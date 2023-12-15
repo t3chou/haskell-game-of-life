@@ -59,6 +59,7 @@ executable haskell-game-of-life-exe
     , microlens-th
     , microlens-mtl
     , mtl
+    , text
     , time
     , random
     , vty
