@@ -24,7 +24,6 @@ import Brick.Util
 import Brick.Types (Widget, ViewportType(Vertical), EventM
   , BrickEvent(..) 
   )
-import qualified Brick.Widgets.Edit as E
 import qualified Brick.Widgets.Center as C
 import qualified Brick.Widgets.Border as B
 import qualified Brick.Widgets.Border.Style as BS
@@ -33,8 +32,10 @@ import Brick.Main
   , suspendAndResume, halt, getVtyHandle, showFirstCursor, vScrollBy, viewportScroll
   )
 import Brick.Widgets.Core
+import qualified Data.Array as A
+import Life (GridState(..))
 
-data Name = Block | Beehive | Loaf | Boat | Tub | Blinker | Toad | Beacon | Reset | Next | Quit | TextBox | Load
+data Name = Block | Beehive | Loaf | Boat | Tub | Blinker | Toad | Beacon | Reset | Next | Quit | Cell { _idx :: L.GridIndex , _cst :: L.CellState}
           deriving (Show, Ord, Eq)
 
 data St =
@@ -42,7 +43,6 @@ data St =
        , _lastReportedClick :: Maybe (Name, T.Location)
        , _state :: L.GridState
        , _step :: Int 
-       , _edit :: E.Editor String Name
        , _msg :: String
        }
 
@@ -54,19 +54,31 @@ drawUi st =
           B.hBorderWithLabel (str "haskell game of life")
          , vBox [ buttonLayer st
              <+> B.vBorder
-             <+> C.vCenter (hBox [ padLeftRight 5 $ str ("Current: \n"<> (_msg st) <> L.visualize (_state st) L.gridRows L.gridCols <> "\n")])
+             <+> C.vCenter (padAll 3 $ hLimit 10 $ vBox [ strWrap ("Click to modify state\n\nCurrent:") , padTop (Pad 1) (gridLayer st L.gridRows L.gridCols)])
                   , str "(Press Esc to quit or n for the next state)" ]]]
+
+gridLayer :: St -> Int -> Int -> Widget Name
+gridLayer st rs cs = vBox (map (\r -> hBox (map (\c -> mc (r, c) (_state st)) [0..cs-1])) [0..rs-1])
+    where
+        mkCell cell = 
+            clickable cell $
+            --    padTopBottom 1 $
+            --    padLeftRight (if wasClicked then 2 else 3) $
+            str (if _cst cell == L.Alive then "o" else ".")
+        mc idx (GridState g)  = mkCell (Cell idx (g A.! idx)) --str (case g A.! idx of
+            --L.Alive -> "o"
+            --L.Dead  -> ".") 
+        -- cellChar L.Alive = "o"
+        -- cellChar L.Dead  = "."
 
 buttonLayer :: St -> Widget Name
 buttonLayer st =
     vBox [(padBottom (Pad 1) $ str ("Current steps:" <> show (_step st))) , B.hBorder,
     (padBottom (Pad 1) $ str "Select profile (always live):") 
     ,(hBox $ padAll 1 <$> buttons), 
-    vBox [ vBox[(padBottom (Pad 1) $ str "Select profile (oscillators):") 
+    vBox [ (padBottom (Pad 1) $ str "Select profile (oscillators):") 
     ,(hBox $ padAll 1 <$> buttons1), (padBottom (Pad 1) $ str "Controls:") 
-    ,(hBox $ padAll 1 <$> buttons2)] <+> B.vBorder
-             <+> vBox[(padAll 1 $ strWrap "Or enter text and then click in this editor:") ,
-       (padLeft (Pad 1) $ vLimit 12 $ hLimit 15 $ E.renderEditor (str . unlines) True (st^.edit))]]]
+    ,(hBox $ padAll 1 <$> buttons2)]]
     where
         buttons = mkButton <$> buttonData
         buttonData = [ (Block, "Block", attrName "Block")
@@ -84,7 +96,6 @@ buttonLayer st =
         buttonData2 = [ (Reset, "Reset", attrName "Reset")
                      , (Next, "Next", attrName "Next")
                      , (Quit, "Quit", attrName "Quit")
-                     , (Load, "Load", attrName "Load")
                      ]
         mkButton (name, label, attr) =
             let wasClicked = (fst <$> st^.lastReportedClick) == Just name
@@ -98,7 +109,6 @@ buttonLayer st =
 appEvent :: T.BrickEvent Name e -> T.EventM Name St ()
 appEvent ev@(T.MouseDown n _ _ loc) = do
         lastReportedClick .= Just (n, loc)
-        T.zoom edit $ E.handleEditorEvent ev
         case n of
             Block -> do 
                 state .= (P.strToGrid P.block)
@@ -132,12 +142,8 @@ appEvent ev@(T.MouseDown n _ _ loc) = do
                 step %= (+ 1)
             Quit -> do 
                 halt
-            TextBox -> return ()
-            Load -> do
-                editor <- use edit
-                let contents = E.getEditContents editor
-                state .= (P.strToGrid (concat (lines (concat contents))))
-                step .= 0
+            Cell idx cst -> state %= (\s -> L.toggleState s idx)
+            
             
 appEvent (T.VtyEvent (V.EvKey (V.KChar 'n') [])) = do
     state %= L.evolution
@@ -149,7 +155,7 @@ appEvent (T.VtyEvent (V.EvMouseUp {})) =
 appEvent (T.VtyEvent (V.EvKey V.KEsc [])) =
     halt
 appEvent ev = 
-    T.zoom edit $ E.handleEditorEvent ev
+    return ()
 
 aMap :: AttrMap
 aMap = attrMap V.defAttr
@@ -163,9 +169,7 @@ aMap = attrMap V.defAttr
     , (attrName "Beacon",   V.white `on` V.blue)
     , (attrName "Reset",   V.white `on` V.cyan)
     , (attrName "Next",   V.white `on` V.cyan)
-    , (attrName "Load",   V.white `on` V.cyan)
     , (attrName "Quit",   V.white `on` V.cyan)
-    , (E.editFocusedAttr, V.black `on` V.yellow)
     ]
 
 app :: App St e Name
@@ -181,7 +185,7 @@ app =
 
 main :: IO ()
 main = do
-    void $ defaultMain app $ St [] Nothing P.deadGrid 0 (E.editor TextBox Nothing (unlines (split P.blinker))) ""
+    void $ defaultMain app $ St [] Nothing P.deadGrid 0 ""
 
 split :: String -> [String]
 split "" = []
