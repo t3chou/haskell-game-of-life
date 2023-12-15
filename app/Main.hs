@@ -73,11 +73,11 @@ gridLayer st rs cs = vBox (map (\r -> hBox (map (\c -> mc (r, c) (_state st)) [0
 
 buttonLayer :: St -> Widget Name
 buttonLayer st =
-    vBox [(padBottom (Pad 1) $ str ("Current steps:" <> show (_step st))) , B.hBorder,
-    (padBottom (Pad 1) $ str "Select profile (always live):") 
+    vBox [(padLeft (Pad 1) $ str ("Current steps:" <> show (_step st))) , B.hBorder,
+    (padLeft (Pad 1) $  str "Select profile (always live):") 
     ,(hBox $ padAll 1 <$> buttons), 
-    vBox [ (padBottom (Pad 1) $ str "Select profile (oscillators):") 
-    ,(hBox $ padAll 1 <$> buttons1), (padBottom (Pad 1) $ str "Controls:") 
+    vBox [ (padLeft (Pad 1) $  str "Select profile (oscillators):") 
+    ,(hBox $ padAll 1 <$> buttons1), (padLeft (Pad 1) $  str "Controls:") 
     ,(hBox $ padAll 1 <$> buttons2)]]
     where
         buttons = mkButton <$> buttonData
