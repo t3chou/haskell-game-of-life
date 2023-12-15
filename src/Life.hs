@@ -67,6 +67,10 @@ evolution (GridState g) = GridState (g A.// updates)
                                        ) 0 [(fst idx + i, snd idx + j) | (i, j) <- dirs]
         nextState idx = case (g A.! idx, liveNeigborsCnt idx) of
                             (Dead,  3) -> Alive
+                            (Alive, 8) -> Dead
+                            (Alive, 7) -> Dead
+                            (Alive, 6) -> Dead
+                            (Alive, 5) -> Dead
                             (Alive, 4) -> Dead
                             (Alive, 1) -> Dead
                             (Alive, 0) -> Dead

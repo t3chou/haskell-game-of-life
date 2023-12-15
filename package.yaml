@@ -23,6 +23,14 @@ dependencies:
 - base >= 4.7 && < 5
 - brick
 - array
+- microlens
+- microlens-th
+- microlens-mtl
+- mtl
+- text
+- time
+- random
+- vty
 
 ghc-options:
 - -Wall
