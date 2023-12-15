@@ -32,7 +32,7 @@ newtype GridState = GridState (A.Array GridIndex CellState)
 
 -- | CellState (Cells can be alive or dead)
 data CellState = Alive | Dead
-    deriving Eq
+    deriving (Show, Ord, Eq)
 
 
 -- | toggleState can be used to toggle the state of a cell
