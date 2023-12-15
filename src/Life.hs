@@ -6,7 +6,8 @@ module Life
         CellState(..),
         GridIndex,
         evolution,
-        visualize
+        visualize,
+        toggleState
     ) where
 
 import qualified Data.Array as A
