@@ -51,3 +51,9 @@ Haskell's fits for expressing the game's rules. Key aspects of our implementatio
 4. **Using existing libraries of the hackage ecosystem**: Utilizing existing libraries like containers and vector.
 
 This project aims to create a Conway's Game of Life simulation in Haskell, as well as representing a string connection between a mathematical model and functional programming.
+
+## Source acknowledgment
+
+1. As required by the course website, we are using the Brick library to implement the GUI interface. We did look at the official guidelines from https://github.com/jtdaugherty/brick to implement any components relevant to GUI because the Brick library has never been taught in class.
+2. We use [Haskell's Hoodle](https://hoogle.haskell.org/) to explore and employ functions for implementing our project because not all Haskell components were covered during class.
+3. We use [QuickCheck](https://hackage.haskell.org/package/QuickCheck) library to accomplish the unit testing requirments as required by the course website. 
